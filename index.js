@@ -7,6 +7,7 @@ const activeBtn = document.querySelector(".active");
 const allBtn = document.querySelector(".all");
 const completedBtn = document.querySelector(".completed");
 const count = document.querySelector(".count");
+const filtersElement = document.querySelector('.controls__container')
 let todoList = [];
 let nextId = 1;
 
@@ -14,6 +15,15 @@ let nextId = 1;
 const getActive = (todoList) => {
   return todoList.filter((todo) => !todo.checked);
 };
+// show/hide filters
+const toggleFilters=(todoList)=>{
+if(todoList.length===0){
+  filtersElement.classList.add('hidden')
+}
+else{
+filtersElement.classList.remove('hidden')}
+}
+toggleFilters(todoList)
 
 ///render active
 const renderActive = () => {
@@ -86,6 +96,7 @@ const renderTodos = (todoList) => {
     todos.appendChild(createTodoElement(todo));
   });
   setCounter(getActive(todoList));
+  toggleFilters(todoList)
 };
 
 //create todo
@@ -111,7 +122,7 @@ const submitTodo = (event) => {
 
 //set counter
 const setCounter = (todoList) => {
-  count.textContent = `${todoList.length} items left`;
+  todoList.length===1 ? count.textContent = `${todoList.length} item left` : count.textContent = `${todoList.length} items left`;
 };
 
 //toggle checkboxs all
