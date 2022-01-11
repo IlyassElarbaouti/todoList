@@ -10,15 +10,18 @@ body {
   color: #4d4d4d;
 }
 .container {
+  background-color: white;
   position: relative;
   width: 45%;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+  max-width: 500px;
 }
 .form__container {
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-bottom: 1px solid #bfbfbf;
 }
 .form {
   height: 50px;
@@ -55,9 +58,9 @@ body {
   visibility: visible;
 }
 .todo {
-  width: 80%;
-  padding: 0 10%;
-  border: 1px solid #bfbfbf;
+  width: 96%;
+  padding: 0 2%;
+  border-bottom: 1px solid #bfbfbf;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -96,7 +99,7 @@ input:focus {
   flex: 1;
 }
 .checkbox {
-  margin-right: 10px;
+  margin-right: 20px;
   width: 2em;
   aspect-ratio: 1;
   background-color: white;
@@ -112,4 +115,15 @@ input:focus {
 .checkbox:checked {
   border: 2px solid grey;
   background-color: #85bb3e;
+}
+.overlays {
+  display: block;
+}
+.overlay1 {
+  border-top: 1px solid #bfbfbf;
+}
+.overlay {
+  height: 5px;
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
 }
