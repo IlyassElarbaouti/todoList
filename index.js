@@ -3,34 +3,32 @@ const input = document.querySelector(".form__input");
 const form = document.querySelector(".form");
 const todos = document.querySelector(".todos");
 const checkIcon = document.querySelector(".drop");
-const activeBtn = document.querySelector('.active');
-const allBtn = document.querySelector('.all');
-const completedBtn = document.querySelector('.completed');
-const count = document.querySelector('.count')
+const activeBtn = document.querySelector(".active");
+const allBtn = document.querySelector(".all");
+const completedBtn = document.querySelector(".completed");
+const count = document.querySelector(".count");
 let todoList = [];
 let nextId = 1;
 
 //get active todos
-const getActive = (todoList) =>{
-  return todoList.filter(todo=>!todo.checked)
-}
+const getActive = (todoList) => {
+  return todoList.filter((todo) => !todo.checked);
+};
 
 ///render active
-const renderActive = () =>{
-renderTodos(getActive(todoList
-  ))
-}
+const renderActive = () => {
+  renderTodos(getActive(todoList));
+};
 
 //get completed todos
-const getCompleted = (todoList) =>{
-  return todoList.filter(todo=>todo.checked)
-}
+const getCompleted = (todoList) => {
+  return todoList.filter((todo) => todo.checked);
+};
 
 ///render active
-const renderCompleted = () =>{
-renderTodos(getCompleted(todoList
-  ))
-}
+const renderCompleted = () => {
+  renderTodos(getCompleted(todoList));
+};
 
 //get clicked element index
 const getElementId = (element) => {
@@ -64,10 +62,10 @@ const createTodoElement = (todo) => {
   checkbox.setAttribute("type", "checkbox");
   checkbox.addEventListener("click", toggleCheckbox);
   todo.checked ? checkbox.setAttribute("checked", true) : null;
-  checkbox.classList.add('checkbox')
+  checkbox.classList.add("checkbox");
 
   const label = document.createElement("h2");
-  label.classList.add('label')
+  label.classList.add("label");
   label.textContent = todo.label;
 
   const closeBtn = document.createElement("button");
@@ -87,7 +85,7 @@ const renderTodos = (todoList) => {
   todoList.forEach((todo) => {
     todos.appendChild(createTodoElement(todo));
   });
-  setCounter(getActive(todoList))
+  setCounter(getActive(todoList));
 };
 
 //create todo
@@ -112,33 +110,32 @@ const submitTodo = (event) => {
 };
 
 //set counter
-const setCounter = (todoList)=>{
-  count.textContent = `${todoList.length} items left`
-}
+const setCounter = (todoList) => {
+  count.textContent = `${todoList.length} items left`;
+};
 
 //toggle checkboxs all
 const toggleCheckboxesAll = () => {
   if (!isChecked(todoList)) {
-    toggleAllCheckboxes(todoList,true)
+    toggleAllCheckboxes(todoList, true);
     renderTodos(todoList);
   } else if (isChecked(todoList)) {
-    toggleAllCheckboxes(todoList,false)
+    toggleAllCheckboxes(todoList, false);
     renderTodos(todoList);
   }
 };
 //check/uncheck all checkboxes
-const toggleAllCheckboxes = (todoList,value)=>{
+const toggleAllCheckboxes = (todoList, value) => {
   todoList.forEach((todo) => {
     todo.checked = value;
   });
-}
+};
 //check if all are checked
-const isChecked = (todoList)=>todoList.every(todo=>todo.checked);
+const isChecked = (todoList) => todoList.every((todo) => todo.checked);
 
 //event listeners
 checkIcon.addEventListener("click", toggleCheckboxesAll);
 addbtn.addEventListener("click", submitTodo);
-activeBtn.addEventListener('click',renderActive)
-completedBtn.addEventListener('click',renderCompleted)
-allBtn.addEventListener('click',()=>renderTodos(todoList))
-
+activeBtn.addEventListener("click", renderActive);
+completedBtn.addEventListener("click", renderCompleted);
+allBtn.addEventListener("click", () => renderTodos(todoList));
