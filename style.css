@@ -87,6 +87,11 @@ input:focus {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 2px;
+}
+.btn:hover{
+    border:1px solid #bfbfbf;
+    padding:1px;
 }
 .drop {
   padding-left: 20px;
