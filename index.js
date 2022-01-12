@@ -1,3 +1,4 @@
+// DOM elements
 const addbtn = document.querySelector(".form__btn");
 const input = document.querySelector(".form__input");
 const form = document.querySelector(".form");
@@ -9,18 +10,33 @@ const completedBtn = document.querySelector(".completed");
 const count = document.querySelector(".count");
 const filtersElement = document.querySelector(".controls__container");
 const filterDoneBtn = document.querySelector(".delete-complete");
+const borderedElements = document.querySelectorAll(".border");
+allBtn.classList.add("border");
+
+// variables
 let todoList = [];
 let nextId = 1;
+const stats = { all: "all", completed: "completed", active: "active" };
+const { all, completed, active } = stats;
+let currentStatus = all;
 
-//filter done todos
-const filterDone = () => {
-  todoList = todoList.filter((todo) => !todo.checked);
-  renderTodos(todoList);
+//todos count
+const setCounter = (todoList) => {
+  todoList.length === 1
+    ? (count.textContent = `${todoList.length} item left`)
+    : (count.textContent = `${todoList.length} items left`);
 };
+
 //get active todos
-const getActive = (todoList) => {
+const getActive = () => {
   return todoList.filter((todo) => !todo.checked);
 };
+
+// get completed todos
+const getCompleted = () => {
+  return todoList.filter((todo) => todo.checked);
+};
+
 // show/hide filters
 const toggleFilters = () => {
   if (todoList.length === 0) {
@@ -29,21 +45,44 @@ const toggleFilters = () => {
     filtersElement.classList.remove("hidden");
   }
 };
+
 toggleFilters();
 
-///render active
-const renderActive = () => {
-  renderTodos(getActive(todoList));
+//draw todos in DOM
+const renderTodos = (todoList) => {
+  todos.innerHTML = "";
+  todoList.forEach((todo) => {
+    todos.appendChild(createTodoElement(todo));
+  });
+  setCounter(getActive(todoList));
+  toggleFilters(todoList);
 };
 
-//get completed todos
-const getCompleted = (todoList) => {
-  return todoList.filter((todo) => todo.checked);
+// render control
+const controlRender = () => {
+  toggleBorder();
+  if (currentStatus === all) {
+    renderTodos(todoList);
+    console.log(currentStatus);
+  } else if (currentStatus === completed) {
+    renderTodos(getCompleted());
+    console.log(currentStatus);
+  } else if (currentStatus == active) {
+    renderTodos(getActive());
+    console.log(currentStatus);
+  }
 };
 
-///render active
-const renderCompleted = () => {
-  renderTodos(getCompleted(todoList));
+//filter handler
+const filterHandler = (status) => {
+  currentStatus = status;
+  controlRender();
+};
+
+//filter done todos
+const filterDone = () => {
+  todoList = todoList.filter((todo) => !todo.checked);
+  controlRender();
 };
 
 //get clicked element index
@@ -58,14 +97,14 @@ const deleteTodo = (event) => {
   todoList = todoList.filter(
     (todo) => todo.id !== +event.target.parentElement.id
   );
-  renderTodos(todoList);
+  controlRender();
 };
 
 //toggle checkbox
 const toggleCheckbox = (event) => {
   const todo = getTodoById(getElementId(event.target));
   todo.checked = !todo.checked;
-  renderTodos(todoList);
+  controlRender();
 };
 
 //add todo structure
@@ -95,16 +134,6 @@ const createTodoElement = (todo) => {
   return newTodo;
 };
 
-//draw todos in DOM
-const renderTodos = (todoList) => {
-  todos.innerHTML = "";
-  todoList.forEach((todo) => {
-    todos.appendChild(createTodoElement(todo));
-  });
-  setCounter(getActive(todoList));
-  toggleFilters(todoList);
-};
-
 //create todo
 const createTodo = (label) => {
   if (label.trim() === "") {
@@ -123,40 +152,53 @@ const submitTodo = (event) => {
   event.preventDefault();
   createTodo(input.value);
   input.value = "";
-  renderTodos(todoList);
+  controlRender();
 };
 
-//set counter
-const setCounter = (todoList) => {
-  todoList.length === 1
-    ? (count.textContent = `${todoList.length} item left`)
-    : (count.textContent = `${todoList.length} items left`);
-};
+// check if all are checked
+const isChecked = (todoList) => todoList.every((todo) => todo.checked);
 
-//toggle checkboxs all
+// toggle checkboxs all
 const toggleCheckboxesAll = () => {
   if (!isChecked(todoList)) {
     toggleAllCheckboxes(todoList, true);
-    renderTodos(todoList);
+    controlRender();
   } else if (isChecked(todoList)) {
     toggleAllCheckboxes(todoList, false);
-    renderTodos(todoList);
+    controlRender();
   }
 };
-//check/uncheck all checkboxes
+// check/uncheck all checkboxes
 const toggleAllCheckboxes = (todoList, value) => {
   todoList.forEach((todo) => {
     todo.checked = value;
   });
 };
-//check if all are checked
-const isChecked = (todoList) => todoList.every((todo) => todo.checked);
 
-//event listeners
+// change border depending on current status
+const toggleBorder = () => {
+  if (currentStatus === all) {
+    allBtn.classList.add("border");
+    completedBtn.classList.remove("border");
+    activeBtn.classList.remove("border");
+  } else if (currentStatus === completed) {
+    completedBtn.classList.add("border");
+    activeBtn.classList.remove("border");
+    allBtn.classList.remove("border");
+  } else {
+    activeBtn.classList.add("border");
+    allBtn.classList.remove("border");
+    completedBtn.classList.remove("border");
+  }
+};
+
+// event listeners
 checkIcon.addEventListener("click", toggleCheckboxesAll);
-addbtn.addEventListener("click", submitTodo);
-activeBtn.addEventListener("click", renderActive);
-completedBtn.addEventListener("click", renderCompleted);
-allBtn.addEventListener("click", () => renderTodos(todoList));
-filterDoneBtn.addEventListener("click", () => filterDone(todoList));
 
+addbtn.addEventListener("click", submitTodo);
+
+activeBtn.addEventListener("click", () => filterHandler(active));
+completedBtn.addEventListener("click", () => filterHandler(completed));
+allBtn.addEventListener("click", () => filterHandler(all));
+
+filterDoneBtn.addEventListener("click", () => filterDone(todoList));
