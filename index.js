@@ -62,7 +62,7 @@ const editTodosToRender = () => {
   }
 }
 
-//draw todos in DOM
+//render todos in DOM
 const renderTodos = () => {
   todos.innerHTML = "";
   editTodosToRender()
@@ -161,20 +161,20 @@ const submitTodo = (event) => {
 };
 
 // check if all are checked
-const isChecked = (todoList) => todoList.every((todo) => todo.checked);
+const isChecked = todoList => todoList.every((todo) => todo.checked);
 
 // toggle checkboxs all
 const toggleCheckboxesAll = () => {
   if (!isChecked(todoList)) {
-    toggleAllCheckboxes(todoList, true);
+    toggleAllCheckboxes(true);
     renderTodos();
   } else if (isChecked(todoList)) {
-    toggleAllCheckboxes(todoList, false);
+    toggleAllCheckboxes(false);
     renderTodos();
   }
 };
 // check/uncheck all checkboxes
-const toggleAllCheckboxes = (todoList, value) => {
+const toggleAllCheckboxes = value => {
   todoList.forEach((todo) => {
     todo.checked = value;
   });
@@ -206,6 +206,7 @@ const toggleClearBtn = () => {
   }
 };
 
+
 renderTodos();
 
 // event listeners
@@ -216,5 +217,4 @@ addbtn.addEventListener("click", submitTodo);
 activeBtn.addEventListener("click", () => filterHandler(STATUS.active));
 completedBtn.addEventListener("click", () => filterHandler(STATUS.completed));
 allBtn.addEventListener("click", () => filterHandler(STATUS.all));
-
 filterDoneBtn.addEventListener("click", () => deleteDone(todoList));
