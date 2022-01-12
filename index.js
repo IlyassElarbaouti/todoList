@@ -186,10 +186,6 @@ const styleChevron = () => {
   }
 };
 
-// check/uncheck all checkboxes
-const toggleAllCheckboxes = (value) => {
-  
-};
 
 // change border depending on current status
 const updateBorder = () => {
