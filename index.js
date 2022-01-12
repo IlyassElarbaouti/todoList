@@ -61,6 +61,7 @@ const renderTodos = (todoList) => {
 // render control
 const controlRender = () => {
   toggleBorder();
+  toggleClearBtn();
   if (currentStatus === all) {
     renderTodos(todoList);
     console.log(currentStatus);
@@ -189,6 +190,15 @@ const toggleBorder = () => {
     activeBtn.classList.add("border");
     allBtn.classList.remove("border");
     completedBtn.classList.remove("border");
+  }
+};
+
+// show/hide clear completed
+const toggleClearBtn = () => {
+  if (getCompleted().length === 0) {
+    filterDoneBtn.classList.add("unvisible");
+  } else {
+    filterDoneBtn.classList.remove("unvisible");
   }
 };
 
