@@ -73,6 +73,7 @@ const renderTodos = () => {
   toggleClearBtn();
   setCounter(getActive());
   toggleFilters();
+  styleChevron();
   console.log(todosToRender)
 };
 
@@ -173,6 +174,15 @@ const toggleCheckboxesAll = () => {
     renderTodos();
   }
 };
+
+// style chevron 
+const styleChevron = () => {
+    if (todosToRender.every((todo) => todo.checked)) {
+      checkIcon.classList.add("dark");
+    } else {
+      checkIcon.classList.remove("dark");
+    }
+}
 // check/uncheck all checkboxes
 const toggleAllCheckboxes = value => {
   todoList.forEach((todo) => {
@@ -218,3 +228,4 @@ activeBtn.addEventListener("click", () => filterHandler(STATUS.active));
 completedBtn.addEventListener("click", () => filterHandler(STATUS.completed));
 allBtn.addEventListener("click", () => filterHandler(STATUS.all));
 filterDoneBtn.addEventListener("click", () => deleteDone(todoList));
+
