@@ -15,7 +15,7 @@ allBtn.classList.add("border");
 
 // variables
 let todoList = [{ label: "test", id: 1, checked: true }];
-let nextId = todoList.length+1;
+let nextId = todoList.length + 1;
 const STATUS = { all: "all", completed: "completed", active: "active" };
 let currentStatus = STATUS.all;
 let todosToRender = todoList;
@@ -60,26 +60,25 @@ const editTodosToRender = () => {
   } else if (currentStatus === STATUS.active) {
     todosToRender = getActive();
   }
-}
+};
 
 //render todos in DOM
 const renderTodos = () => {
   todos.innerHTML = "";
-  editTodosToRender()
+  editTodosToRender();
   todosToRender.forEach((todo) => {
     todos.appendChild(createTodoElement(todo));
   });
-  toggleBorder();
+  updateBorder();
   toggleClearBtn();
   setCounter(getActive());
   toggleFilters();
   styleChevron();
-  console.log(todosToRender)
+  console.log(todosToRender);
 };
 
-
 //filter handler
-const filterHandler = (status) => {
+const filterTodos = (status) => {
   currentStatus = status;
   renderTodos();
 };
@@ -106,7 +105,7 @@ const deleteTodo = (event) => {
 };
 
 //toggle checkbox
-const toggleCheckbox = (event) => {
+const toggleChecked = (event) => {
   const todo = getTodoById(getElementId(event.target));
   todo.checked = !todo.checked;
   renderTodos();
@@ -121,7 +120,7 @@ const createTodoElement = (todo) => {
 
   const checkbox = document.createElement("input");
   checkbox.setAttribute("type", "checkbox");
-  checkbox.addEventListener("click", toggleCheckbox);
+  checkbox.addEventListener("click", toggleChecked);
   todo.checked ? checkbox.setAttribute("checked", true) : null;
   checkbox.classList.add("checkbox");
 
@@ -162,36 +161,38 @@ const submitTodo = (event) => {
 };
 
 // check if all are checked
-const isChecked = todoList => todoList.every((todo) => todo.checked);
+const isChecked = () => todoList.every((todo) => todo.checked);
 
 // toggle checkboxs all
 const toggleCheckboxesAll = () => {
-  if (!isChecked(todoList)) {
-    toggleAllCheckboxes(true);
-    renderTodos();
-  } else if (isChecked(todoList)) {
-    toggleAllCheckboxes(false);
-    renderTodos();
+  if (!isChecked()) {
+    todoList.forEach((todo) => {
+      todo.checked = true;
+    });
+  } else if (isChecked()) {
+    todoList.forEach((todo) => {
+      todo.checked = false;
+    })
+  };
+  renderTodos();
+}
+
+// style chevron
+const styleChevron = () => {
+  if (todosToRender.every((todo) => todo.checked)) {
+    checkIcon.classList.add("dark");
+  } else {
+    checkIcon.classList.remove("dark");
   }
 };
 
-// style chevron 
-const styleChevron = () => {
-    if (todosToRender.every((todo) => todo.checked)) {
-      checkIcon.classList.add("dark");
-    } else {
-      checkIcon.classList.remove("dark");
-    }
-}
 // check/uncheck all checkboxes
-const toggleAllCheckboxes = value => {
-  todoList.forEach((todo) => {
-    todo.checked = value;
-  });
+const toggleAllCheckboxes = (value) => {
+  
 };
 
 // change border depending on current status
-const toggleBorder = () => {
+const updateBorder = () => {
   if (currentStatus === STATUS.all) {
     allBtn.classList.add("border");
     completedBtn.classList.remove("border");
@@ -216,7 +217,6 @@ const toggleClearBtn = () => {
   }
 };
 
-
 renderTodos();
 
 // event listeners
@@ -224,8 +224,7 @@ checkIcon.addEventListener("click", toggleCheckboxesAll);
 
 addbtn.addEventListener("click", submitTodo);
 
-activeBtn.addEventListener("click", () => filterHandler(STATUS.active));
-completedBtn.addEventListener("click", () => filterHandler(STATUS.completed));
-allBtn.addEventListener("click", () => filterHandler(STATUS.all));
+activeBtn.addEventListener("click", () => filterTodos(STATUS.active));
+completedBtn.addEventListener("click", () => filterTodos(STATUS.completed));
+allBtn.addEventListener("click", () => filterTodos(STATUS.all));
 filterDoneBtn.addEventListener("click", () => deleteDone(todoList));
-
