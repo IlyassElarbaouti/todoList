@@ -14,17 +14,19 @@ const borderedElements = document.querySelectorAll(".border");
 allBtn.classList.add("border");
 
 // variables
-let todoList = [];
-let nextId = 1;
-const stats = { all: "all", completed: "completed", active: "active" };
-const { all, completed, active } = stats;
-let currentStatus = all;
+let todoList = [{ label: "test", id: 1, checked: true }];
+let nextId = todoList.length+1;
+const STATUS = { all: "all", completed: "completed", active: "active" };
+let currentStatus = STATUS.all;
+let todosToRender = todoList;
 
 //todos count
-const setCounter = (todoList) => {
-  todoList.length === 1
-    ? (count.textContent = `${todoList.length} item left`)
-    : (count.textContent = `${todoList.length} items left`);
+const setCounter = () => {
+  if (todoList.length === 1) {
+    count.textContent = `${todoList.length} item left`;
+  } else {
+    count.textContent = `${todoList.length} items left`;
+  }
 };
 
 //get active todos
@@ -48,42 +50,43 @@ const toggleFilters = () => {
 
 toggleFilters();
 
+// edit todos to render
+
+const editTodosToRender = () => {
+  if (currentStatus === STATUS.all) {
+    todosToRender = todoList;
+  } else if (currentStatus === STATUS.completed) {
+    todosToRender = getCompleted();
+  } else if (currentStatus === STATUS.active) {
+    todosToRender = getActive();
+  }
+}
+
 //draw todos in DOM
-const renderTodos = (todoList) => {
+const renderTodos = () => {
   todos.innerHTML = "";
-  todoList.forEach((todo) => {
+  editTodosToRender()
+  todosToRender.forEach((todo) => {
     todos.appendChild(createTodoElement(todo));
   });
-  setCounter(getActive(todoList));
-  toggleFilters(todoList);
-};
-
-// render control
-const controlRender = () => {
   toggleBorder();
   toggleClearBtn();
-  if (currentStatus === all) {
-    renderTodos(todoList);
-    console.log(currentStatus);
-  } else if (currentStatus === completed) {
-    renderTodos(getCompleted());
-    console.log(currentStatus);
-  } else if (currentStatus == active) {
-    renderTodos(getActive());
-    console.log(currentStatus);
-  }
+  setCounter(getActive());
+  toggleFilters();
+  console.log(todosToRender)
 };
+
 
 //filter handler
 const filterHandler = (status) => {
   currentStatus = status;
-  controlRender();
+  renderTodos();
 };
 
-//filter done todos
-const filterDone = () => {
+//delete all done todos
+const deleteDone = () => {
   todoList = todoList.filter((todo) => !todo.checked);
-  controlRender();
+  renderTodos();
 };
 
 //get clicked element index
@@ -98,15 +101,16 @@ const deleteTodo = (event) => {
   todoList = todoList.filter(
     (todo) => todo.id !== +event.target.parentElement.id
   );
-  controlRender();
+  renderTodos();
 };
 
 //toggle checkbox
 const toggleCheckbox = (event) => {
   const todo = getTodoById(getElementId(event.target));
   todo.checked = !todo.checked;
-  controlRender();
+  renderTodos();
 };
+status;
 
 //add todo structure
 const createTodoElement = (todo) => {
@@ -153,7 +157,7 @@ const submitTodo = (event) => {
   event.preventDefault();
   createTodo(input.value);
   input.value = "";
-  controlRender();
+  renderTodos();
 };
 
 // check if all are checked
@@ -163,10 +167,10 @@ const isChecked = (todoList) => todoList.every((todo) => todo.checked);
 const toggleCheckboxesAll = () => {
   if (!isChecked(todoList)) {
     toggleAllCheckboxes(todoList, true);
-    controlRender();
+    renderTodos();
   } else if (isChecked(todoList)) {
     toggleAllCheckboxes(todoList, false);
-    controlRender();
+    renderTodos();
   }
 };
 // check/uncheck all checkboxes
@@ -178,11 +182,11 @@ const toggleAllCheckboxes = (todoList, value) => {
 
 // change border depending on current status
 const toggleBorder = () => {
-  if (currentStatus === all) {
+  if (currentStatus === STATUS.all) {
     allBtn.classList.add("border");
     completedBtn.classList.remove("border");
     activeBtn.classList.remove("border");
-  } else if (currentStatus === completed) {
+  } else if (currentStatus === STATUS.completed) {
     completedBtn.classList.add("border");
     activeBtn.classList.remove("border");
     allBtn.classList.remove("border");
@@ -202,13 +206,15 @@ const toggleClearBtn = () => {
   }
 };
 
+renderTodos();
+
 // event listeners
 checkIcon.addEventListener("click", toggleCheckboxesAll);
 
 addbtn.addEventListener("click", submitTodo);
 
-activeBtn.addEventListener("click", () => filterHandler(active));
-completedBtn.addEventListener("click", () => filterHandler(completed));
-allBtn.addEventListener("click", () => filterHandler(all));
+activeBtn.addEventListener("click", () => filterHandler(STATUS.active));
+completedBtn.addEventListener("click", () => filterHandler(STATUS.completed));
+allBtn.addEventListener("click", () => filterHandler(STATUS.all));
 
-filterDoneBtn.addEventListener("click", () => filterDone(todoList));
+filterDoneBtn.addEventListener("click", () => deleteDone(todoList));
