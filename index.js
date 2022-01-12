@@ -23,9 +23,9 @@ let todosToRender = todoList;
 //todos count
 const setCounter = () => {
   if (todoList.length === 1) {
-    count.textContent = `${todoList.length} item left`;
+    count.textContent = `${getActive().length} item left`;
   } else {
-    count.textContent = `${todoList.length} items left`;
+    count.textContent = `${getActive().length} items left`;
   }
 };
 
