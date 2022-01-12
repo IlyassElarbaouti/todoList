@@ -102,6 +102,7 @@ input:focus {
 .drop {
   padding-left: 20px;
   cursor: pointer;
+  color:#bfbfbf
 }
 .count {
   margin-left: 5px;
@@ -138,6 +139,22 @@ input:focus {
   width: 100%;
   border-bottom: 1px solid #bfbfbf;
 }
+.subTxt__container{
+margin-top: 40px;
+display: flex;
+align-items: center;
+flex-direction: column;
+}
 .unvisible {
   visibility: hidden;
+}
+.subTxt , .subLink {
+    color:#bfbfbf;
+    text-decoration: none;
+}
+.subLink:hover{
+text-decoration: underline #bfbfbf;
+}
+.subTxt{
+    margin: 10px;
 }
